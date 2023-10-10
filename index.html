@@ -110,3 +110,100 @@
 
 	</body>
 </html>
+import tkinter as tk
+from random import randint
+
+class VirtualPet:
+    def __init__(self):
+        self.name = "Pet"
+        self.hunger = 50
+        self.happiness = 50
+        self.age = 0
+        self.achievements = []
+        
+    def feed(self):
+        self.hunger -= 10
+        self.happiness += 5
+        self.age += 1
+        
+    def play(self):
+        self.hunger += 5
+        self.happiness += 10
+        self.age += 1
+        
+    def check_status(self):
+        if self.hunger <= 0 or self.happiness <= 0:
+            return "Your pet has passed away. Game over!"
+        elif self.hunger >= 100 or self.happiness >= 100:
+            return "Your pet is too happy and full to continue."
+        else:
+            return None
+
+    def get_achievement(self):
+        if self.age >= 10:
+            self.achievements.append("Experienced Owner")
+        if self.hunger <= 20:
+            self.achievements.append("Healthy Eater")
+        if self.happiness >= 80:
+            self.achievements.append("Joyful Pet")
+
+class VirtualPetApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Virtual Pet")
+        
+        self.pet = VirtualPet()
+        
+        self.pet_name_label = tk.Label(root, text=f"Name: {self.pet.name}")
+        self.pet_hunger_label = tk.Label(root, text=f"Hunger: {self.pet.hunger}")
+        self.pet_happiness_label = tk.Label(root, text=f"Happiness: {self.pet.happiness}")
+        self.pet_age_label = tk.Label(root, text=f"Age: {self.pet.age}")
+        
+        self.feed_button = tk.Button(root, text="Feed", command=self.feed_pet)
+        self.play_button = tk.Button(root, text="Play", command=self.play_with_pet)
+        
+        self.status_label = tk.Label(root, text="")
+        self.achievements_label = tk.Label(root, text="Achievements:")
+        
+        self.pet_name_label.pack()
+        self.pet_hunger_label.pack()
+        self.pet_happiness_label.pack()
+        self.pet_age_label.pack()
+        self.feed_button.pack()
+        self.play_button.pack()
+        self.status_label.pack()
+        self.achievements_label.pack()
+
+    def feed_pet(self):
+        self.pet.feed()
+        self.update_pet_info()
+        self.check_game_status()
+        
+    def play_with_pet(self):
+        self.pet.play()
+        self.update_pet_info()
+        self.check_game_status()
+        
+    def update_pet_info(self):
+        self.pet_name_label.config(text=f"Name: {self.pet.name}")
+        self.pet_hunger_label.config(text=f"Hunger: {self.pet.hunger}")
+        self.pet_happiness_label.config(text=f"Happiness: {self.pet.happiness}")
+        self.pet_age_label.config(text=f"Age: {self.pet.age}")
+        self.update_achievements()
+        
+    def update_achievements(self):
+        self.pet.get_achievement()
+        achievements_text = "\n".join(self.pet.achievements)
+        self.achievements_label.config(text=f"Achievements:\n{achievements_text}")
+        
+    def check_game_status(self):
+        status = self.pet.check_status()
+        if status:
+            self.status_label.config(text=status)
+            self.feed_button.config(state="disabled")
+            self.play_button.config(state="disabled")
+        else:
+            self.status_label.config(text="")
+        
+    
+    
